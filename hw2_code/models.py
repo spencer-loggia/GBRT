@@ -12,19 +12,18 @@ class RegressionTree(object):
         if len(usedfeatures) > 0:
             self.used_features = usedfeatures
         else:
-            self.used_features = np.zeros(nfeatures, dtype=0)
+            self.used_features = np.zeros(nfeatures, dtype=np.float)
         self.max_depth = max_depth
         self.feature = -1
+        self.theta = -1
         self.right = -1
         self.left = -1
-        self.X = -1
-        self.y = -1
 
-    def scoreSplit(self, feature, threshold):
-        score = 0
+    def scoreSplit(self, feature, threshold, X, y):
+        score = 3
         return score
 
-    def bestSplit(self):
+    def bestSplit(self, X, y):
         scores = []
         max_score = -1
         max_theta = -1
@@ -33,34 +32,34 @@ class RegressionTree(object):
             if self.used_features[f] == 0:
                 fmax_score = -1
                 fmax_theta = -1
-                for t in self.X:
-                    cur_score = self.scoreSplit(f, t[f])
+                for t in X:
+                    cur_score = self.scoreSplit(f, t[f], X, y)
                     if cur_score > fmax_score:
                         fmax_score = cur_score
-                        fmax_theta = t[f];
+                        fmax_theta = t[f]
                 if fmax_score > max_score:
                     max_score = fmax_score
                     max_theta = fmax_theta
                     feature_split = f
         return [feature_split, max_theta]
 
-    def split(self):
-        stats = self.bestSplit()
+    def split(self, X, y):
+        stats = self.bestSplit(X, y)
         rightX = []
         righty = []
         leftX = []
         lefty = []
-        theta = stats[1]
+        self.theta = stats[1]
         feature = stats[0]
-        temp = np.transpose(self.X)
+        temp = np.transpose(X)
         featureCol = temp[self.feature]
-        for i in featureCol:
-            if i <= theta:
-                leftX.append(self.X[i])
-                lefty.append(self.y[i])
+        for i in range(0, len(featureCol)):
+            if featureCol[i] <= self.theta:
+                leftX.append(X[i])
+                lefty.append(y[i])
             else:
-                rightX.append(self.X[i])
-                righty.append(self.y[i])
+                rightX.append(X[i])
+                righty.append(y[i])
 
                 #use dictionary
         return {'leftX': leftX,
@@ -75,15 +74,18 @@ class RegressionTree(object):
                    y: An array of floats with shape [num_examples].
                    max_depth: An int representing the maximum depth of the tree
         """
-        self.X = self.np.array(X)
+        self.X = np.array(X)
         self.y = np.array(y)
-        newData = self.split()
-        self.left = RegressionTree(self.num_input_features, self.max_depth - 1, usedfeatures=self.used_features)
-        self.left.fit(X=newData['leftX'], y=newData['lefty'])
-        self.right = RegressionTree(self.num_input_features, self.max_depth - 1, usedfeatures=self.used_features)
-        self.right.fit(X=newData['rightX'], y=newData['righty'])
-        return self
 
+        if self.max_depth > 0:
+            newData = self.split(X, y)
+            self.left = RegressionTree(self.num_input_features, self.max_depth - 1, usedfeatures=self.used_features)
+            self.left.fit(X=newData['leftX'], y=newData['lefty'])
+            self.right = RegressionTree(self.num_input_features, self.max_depth - 1, usedfeatures=self.used_features)
+            self.right.fit(X=newData['rightX'], y=newData['righty'])
+            return self
+        else:
+            return -1
 
     def predict(self, X):
         """ Predict.
