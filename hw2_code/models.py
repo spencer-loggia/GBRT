@@ -42,8 +42,6 @@ class RegressionTree(object):
         minL = []
         for f in range(0, self.num_input_features):
             for t in X:
-                if type(t[f]) != np.float64:
-                    print('vbad')
                 cur_score = self.scoreSplit(f, t[f], X, y)
                 if cur_score['score'] < min_score:
                     min_score = cur_score['score']
@@ -91,18 +89,24 @@ class RegressionTree(object):
             self.left = np.mean(newData['lefty'])
             self.right = np.mean(newData['righty'])
 
-    def predict(self, X):
+    def predictOne(self, X):
         if X[self.feature] <= self.theta:
             if type(self.left) == np.float64:
                 return self.left
             else:
-                return self.left.predict(X)
+                return self.left.predictOne(X)
         elif X[self.feature] > self.theta:
             if type(self.right) == np.float64:
                 return self.right
             else:
-                return self.right.predict(X)
+                return self.right.predictOne(X)
 
+    def predict(self, X):
+        predictions = []
+        for x in X:
+            pred = self.predictOne(x)
+            predictions.append(pred)
+        return predictions
 
 
 class GradientBoostedRegressionTree(object):
