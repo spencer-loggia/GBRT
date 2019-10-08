@@ -89,12 +89,12 @@ class RegressionTree(object):
             self.right = np.mean(newData['righty'])
 
     def predictOne(self, X):
-        if X[self.feature] <= self.theta:
+        if X[self.feature] < self.theta:
             if type(self.left) == np.float64:
                 return self.left
             else:
                 return self.left.predictOne(X)
-        elif X[self.feature] > self.theta:
+        elif X[self.feature] >= self.theta:
             if type(self.right) == np.float64:
                 return self.right
             else:
@@ -111,15 +111,14 @@ class RegressionTree(object):
         print(str(level) + " :: feature: " + str(self.feature) + "  theta: " + str(self.theta))
         if type(self.left) == np.float64:
             print(str(level) + ": val: " + str(self.left))
-            return 0
         else:
             self.left.traverse(level+1)
 
         if type(self.right) == np.float64:
             print(str(level) + ": val: " + str(self.right))
-            return 0
         else:
             self.right.traverse(level+1)
+        return 0
 
 
 class GradientBoostedRegressionTree(object):

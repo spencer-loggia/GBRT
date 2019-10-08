@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/hw2_code/dev.predictions" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/dev.predictions" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/regression.tree.model" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/regression.tree.model" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw2_code/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
