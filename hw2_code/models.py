@@ -167,8 +167,10 @@ class GradientBoostedRegressionTree(object):
         Returns:
                 An array of floats with shape [num_examples].
         """
-        prediction = self.initial_prediction
+        prediction = np.zeros(len(X))
         for t in self.forest:
-            prediction += self.regularization_parameter * t.predict(X)
+            pred1 = t.predict(X)
+            pred2 = np.multiply(self.regularization_parameter, pred1)
+            prediction += pred2
         return prediction
 
