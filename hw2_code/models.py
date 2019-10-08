@@ -6,73 +6,67 @@ This file is where you will write most of your code!
 
 import numpy as np
 
+
 class RegressionTree(object):
+
     def __init__(self, nfeatures, max_depth):
         self.num_input_features = nfeatures
         self.max_depth = max_depth
         self.feature = -1
         self.theta = -1
         self.right = -1
-        self.left = -1
-        self.normy = 1  # to make scores comparable across features
+        self.left = -1 # used to make scores comparable across features
 
-    def scoreSplit(self, feature, threshold, X, y):
-        featureCol = np.transpose(X)[feature]
-        norm = np.linalg.norm(featureCol)
-        if norm == 0:
-            return - 1
-        featureCol = featureCol / norm
-        threshold = threshold / norm
-        R = np.argwhere(featureCol > threshold)
-        L = np.argwhere(featureCol <= threshold)
-        ssR = np.sum(np.square(y[R] / self.normy - np.mean(featureCol[R])))
-        ssL = np.sum(np.square(y[L] / self.normy - np.mean(featureCol[L])))
+    def scoreSplit(self, feature, threshold, Xs, y):
+        Xs = np.transpose(Xs)
+        t_arg = np.searchsorted(Xs[feature], threshold)
+        R = np.transpose(Xs)[t_arg:len(y)]
+        yr = y[t_arg:len(y)]
+        L = np.transpose(Xs)[0:t_arg]
+        yl = y[0:t_arg]
+        if R.size == 0:
+            ssR = 0
+        else:
+            ssR = np.sum(np.square(yr - np.mean(yr)))
+        if L.size == 0:
+            ssL = 0
+        else:
+            ssL = np.sum(np.square(yl - np.mean(yl)))
         return {'score': ssR + ssL,
-                'left': L,
-                'right': R}
+                'leftX': L,
+                'rightX': R,
+                'lefty': yl,
+                'righty': yr}
 
     def bestSplit(self, X, y):
-        scores = []
         min_score = 9999999999999999
         min_theta = 9999999999999999
         feature_split = -1
-        minR = []
-        minL = []
+        min_output = {}
+        variance = True
         for f in range(0, self.num_input_features):
-            for t in X:
-                cur_score = self.scoreSplit(f, t[f], X, y)
+            data = np.vstack([np.transpose(X), y])
+            data = np.transpose(data)
+            col = data[:, f].argsort(kind='mergesort')
+            data = data[col]
+            Xs = np.transpose(data)[0:len(X[0]), :]
+            Xs = np.transpose(Xs)
+            ys = np.transpose(data)[len(data[0])-1]
+            for t in range(0, len(X)):
+                cur_score = self.scoreSplit(f, X[t][f], Xs, ys)
                 if type(cur_score) != int and cur_score['score'] < min_score and \
-                        cur_score['left'].size > 0 and cur_score['right'].size > 0:
-                    min_score = cur_score['score']
-                    min_theta = t[f]
+                        cur_score['leftX'].size > 0 and cur_score['rightX'].size > 0:
+                    min_output = cur_score
+                    min_score = min_output['score']
+                    min_theta = X[t][f]
                     feature_split = f
-                    minR = cur_score['right']
-                    minL = cur_score['left']
         self.feature = feature_split
         self.theta = min_theta
-        return [minL, minR]
-
-    def split(self, X, y):
-        data = self.bestSplit(X, y)
-        variance = True
-        if type(data[0]) == list or data[0].size == 0 or data[1].size == 0:
+        if type(min_output['rightX']) == list or type(min_output['leftX']) == list \
+                or min_output['rightX'].size == 0 or min_output['leftX'].size == 0:
             variance = False
-        LX = []
-        Ly = []
-        RX = []
-        Ry = []
-        for i in data[0]:
-            LX.append(X[i[0]])
-            Ly.append(y[i[0]])
-        for i in data[1]:
-            RX.append(X[i[0]])
-            Ry.append(y[i[0]])
-                #use dictionary
-        return {'leftX': np.array(LX),
-                'lefty': np.array(Ly),
-                'rightX': np.array(RX),
-                'righty': np.array(Ry),
-                'variance': variance}
+        min_output.update({'variance': variance})
+        return min_output
 
     def fit(self, *, X, y, base=True):
         """ Fit the model.
@@ -81,16 +75,17 @@ class RegressionTree(object):
                    y: An array of floats with shape [num_examples].
                    max_depth: An int representing the maximum depth of the tree
         """
-        self.normy = np.linalg.norm(y)
-        newData = self.split(X, y)
-        if self.max_depth > 0 and len(X) > 1 and newData['variance']:
+        newData = self.bestSplit(X, y)
+        if self.max_depth > 0 and newData['lefty'].size > 1 and newData['variance']:
             self.left = RegressionTree(self.num_input_features, self.max_depth - 1)
-            self.left.fit(X=newData['leftX'], y=newData['lefty'])
-            self.right = RegressionTree(self.num_input_features, self.max_depth - 1)
-            self.right.fit(X=newData['rightX'], y=newData['righty'])
-            return self
+            self.left.fit(X=newData['leftX'], y=newData['lefty'], base=False)
         else:
             self.left = np.mean(newData['lefty'])
+
+        if self.max_depth > 0 and newData['righty'].size > 1 and newData['variance']:
+            self.right = RegressionTree(self.num_input_features, self.max_depth - 1)
+            self.right.fit(X=newData['rightX'], y=newData['righty'], base=False)
+        else:
             self.right = np.mean(newData['righty'])
 
     def predictOne(self, X):
@@ -110,7 +105,7 @@ class RegressionTree(object):
         for x in X:
             pred = self.predictOne(x)
             predictions.append(pred)
-        return predictions
+        return np.array(predictions)
 
     def traverse(self, level = 0):
         print(str(level) + " :: feature: " + str(self.feature) + "  theta: " + str(self.theta))
@@ -119,6 +114,7 @@ class RegressionTree(object):
             return 0
         else:
             self.left.traverse(level+1)
+
         if type(self.right) == np.float64:
             print(str(level) + ": val: " + str(self.right))
             return 0
@@ -132,6 +128,13 @@ class GradientBoostedRegressionTree(object):
         self.max_depth = max_depth
         self.n_estimators = n_estimators
         self.regularization_parameter = regularization_parameter
+        self.forest = []
+        self.initial_prediction = 0
+        self.prediction = 0
+
+    def calculate_residuals(self, predictions, y):
+        return np.array(y - predictions)
+
     def fit(self, *, X, y):
         """ Fit the model.
                 Args:
@@ -140,8 +143,22 @@ class GradientBoostedRegressionTree(object):
                 max_depth: An int representing the maximum depth of the tree
                 n_estimators: An int representing the number of regression trees to iteratively fit
         """
-        # TODO: Implement this!
-        raise Exception("You must implement this method!")
+        for t in range(0, self.n_estimators):
+            prediction = []
+            if t == 0:
+                prediction = self.initial_prediction = np.ones(y.size) * np.mean(y)
+            else:
+                prediction = self.prediction
+
+            resi = self.calculate_residuals(prediction, y)
+            tree = RegressionTree(nfeatures=self.num_input_features, max_depth=self.max_depth)
+            tree.fit(X=X, y=resi)
+            self.add_prediction(X, tree)
+            self.forest.append(tree)
+
+    def add_prediction(self, X, tree):
+        p = np.array(tree.predict(X))
+        self.prediction += self.regularization_parameter * p
 
     def predict(self, X):
         """ Predict.
@@ -151,5 +168,8 @@ class GradientBoostedRegressionTree(object):
         Returns:
                 An array of floats with shape [num_examples].
         """
-        # TODO: Implement this!
-        raise Exception("You must implement this method!")
+        prediction = self.initial_prediction
+        for t in self.forest:
+            prediction += self.regularization_parameter * t.predict(X)
+        return prediction
+

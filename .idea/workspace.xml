@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9552f8e0-a9d9-4159-9afc-e090a1012408" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw2_code/dev.predictions" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw2_code/dev.predictions" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/dev.predictions" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw2_code/regression.tree.model" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw2_code/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw2_code/regression.tree.model" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/regression.tree.model" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -95,12 +93,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
-          <line>96</line>
+          <line>89</line>
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
-          <line>29</line>
+          <line>34</line>
           <option name="timeStamp" value="100" />
         </line-breakpoint>
       </breakpoints>
