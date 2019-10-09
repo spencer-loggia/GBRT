@@ -20,7 +20,7 @@ def train(algorithm='gradient-boosted-regression-tree'):
     if algorithm == 'regression-tree':
         model = models.RegressionTree(nfeatures=37, max_depth=3)
     elif algorithm == 'gradient-boosted-regression-tree':
-        model = models.GradientBoostedRegressionTree(nfeatures=37, max_depth=3, n_estimators=4, regularization_parameter=.2)
+        model = models.GradientBoostedRegressionTree(nfeatures=37, max_depth=3, n_estimators=100, regularization_parameter=.1)
     else:
         raise Exception("Algorithm argument not recognized")
 
@@ -40,6 +40,7 @@ def test():
     # predict labels for dataset
     preds = model.predict(X)
 
+    print(preds)
     # output model predictions
     np.savetxt('test.predictions', preds, fmt='%s')
 

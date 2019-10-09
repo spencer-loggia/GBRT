@@ -9,15 +9,19 @@ import numpy as np
 
 class RegressionTree(object):
 
+    # to map array pf feature, threshold, sortedXs, sortedYs to dictionary storing relevent info
+    calculated = {}
+
     def __init__(self, nfeatures, max_depth):
         self.num_input_features = nfeatures
         self.max_depth = max_depth
         self.feature = -1
         self.theta = -1
         self.right = -1
-        self.left = -1 # used to make scores comparable across features
+        self.left = -1  # used to make scores comparable across features
 
     def scoreSplit(self, feature, threshold, Xs, y):
+        # Xs and y are sorted in best split
         Xs = np.transpose(Xs)
         t_arg = np.searchsorted(Xs[feature], threshold)
         R = np.transpose(Xs)[t_arg:len(y)]
@@ -45,20 +49,32 @@ class RegressionTree(object):
         min_output = {}
         variance = True
         for f in range(0, self.num_input_features):
+            calculated = tuple([tuple([f]), X.data.tobytes()])
             data = np.vstack([np.transpose(X), y])
             data = np.transpose(data)
-            col = data[:, f].argsort(kind='mergesort')
-            data = data[col]
+            if str(calculated) in RegressionTree.calculated:
+                col = RegressionTree.calculated[calculated]
+            else:
+                col = data[:, f].argsort(kind='mergesort')
+                RegressionTree.calculated.update({calculated: col})
+
+            try:
+                data = data[col]
+            except IndexError:
+                print('DATA len: ' + str(len(data)))
+                print('COL len' + str(len(col)))
+                print('augment error')
+
             Xs = np.transpose(data)[0:len(X[0]), :]
             Xs = np.transpose(Xs)
             ys = np.transpose(data)[len(data[0])-1]
-            for t in range(0, len(X)):
-                cur_score = self.scoreSplit(f, X[t][f], Xs, ys)
+            for t in set(X.T[f]):
+                cur_score = self.scoreSplit(f, t, Xs, ys)
                 if type(cur_score) != int and cur_score['score'] < min_score and \
                         cur_score['leftX'].size > 0 and cur_score['rightX'].size > 0:
                     min_output = cur_score
                     min_score = min_output['score']
-                    min_theta = X[t][f]
+                    min_theta = t
                     feature_split = f
         self.feature = feature_split
         self.theta = min_theta
@@ -169,8 +185,8 @@ class GradientBoostedRegressionTree(object):
         """
         prediction = np.zeros(len(X))
         for t in self.forest:
-            pred1 = t.predict(X)
-            pred2 = np.multiply(self.regularization_parameter, pred1)
+            pred1 = np.array(t.predict(X))
+            pred2 = self.regularization_parameter * pred1
             prediction += pred2
         return prediction
 

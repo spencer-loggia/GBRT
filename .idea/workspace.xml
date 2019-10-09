@@ -6,6 +6,8 @@
       <change beforePath="$PROJECT_DIR$/hw2_code/dev.predictions" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/dev.predictions" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/regression.tree.model" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/regression.tree.model" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw2_code/test.model" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/test.model" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw2_code/test.predictions" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/test.predictions" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -91,6 +93,28 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
+          <line>185</line>
+          <option name="timeStamp" value="271" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
+          <line>61</line>
+          <option name="timeStamp" value="276" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
+          <line>51</line>
+          <option name="timeStamp" value="278" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
+          <line>52</line>
+          <option name="timeStamp" value="279" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
