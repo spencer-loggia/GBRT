@@ -5,6 +5,7 @@ This file is where you will write most of your code!
 """
 
 import numpy as np
+from collections import OrderedDict
 
 
 class RegressionTree(object):
@@ -20,13 +21,11 @@ class RegressionTree(object):
         self.right = -1
         self.left = -1  # used to make scores comparable across features
 
-    def scoreSplit(self, feature, threshold, Xs, y):
+    def scoreSplit(self, feature, t_arg, Xs, y):
         # Xs and y are sorted in best split
-        Xs = np.transpose(Xs)
-        t_arg = np.searchsorted(Xs[feature], threshold)
-        R = np.transpose(Xs)[t_arg:len(y)]
+        R = Xs[t_arg:len(y)]
         yr = y[t_arg:len(y)]
-        L = np.transpose(Xs)[0:t_arg]
+        L = Xs[0:t_arg]
         yl = y[0:t_arg]
         if R.size == 0:
             ssR = 0
@@ -63,23 +62,29 @@ class RegressionTree(object):
             except IndexError:
                 print('DATA len: ' + str(len(data)))
                 print('COL len' + str(len(col)))
-                print('augment error')
 
             Xs = np.transpose(data)[0:len(X[0]), :]
             Xs = np.transpose(Xs)
             ys = np.transpose(data)[len(data[0])-1]
-            for t in set(X.T[f]):
-                cur_score = self.scoreSplit(f, t, Xs, ys)
+            prev_theta = -1
+            unique_thetas = list(OrderedDict.fromkeys(Xs[:, f]))
+            index = 0
+            for t in range(0, len(unique_thetas)):
+                while Xs[index][f] != unique_thetas[t]:
+                    index += 1
+                cur_score = self.scoreSplit(f, index, Xs, ys)
+                index += 1
                 if type(cur_score) != int and cur_score['score'] < min_score and \
                         cur_score['leftX'].size > 0 and cur_score['rightX'].size > 0:
                     min_output = cur_score
                     min_score = min_output['score']
-                    min_theta = t
+                    min_theta = unique_thetas[t]
                     feature_split = f
+
         self.feature = feature_split
         self.theta = min_theta
         if type(min_output['rightX']) == list or type(min_output['leftX']) == list \
-                or min_output['rightX'].size == 0 or min_output['leftX'].size == 0:
+                or min_output['rightX'].size < 2 or min_output['leftX'].size < 2:
             variance = False
         min_output.update({'variance': variance})
         return min_output
@@ -92,13 +97,13 @@ class RegressionTree(object):
                    max_depth: An int representing the maximum depth of the tree
         """
         newData = self.bestSplit(X, y)
-        if self.max_depth > 0 and newData['lefty'].size > 1 and newData['variance']:
+        if self.max_depth > 1 and newData['lefty'].size > 1 and newData['variance']:
             self.left = RegressionTree(self.num_input_features, self.max_depth - 1)
             self.left.fit(X=newData['leftX'], y=newData['lefty'], base=False)
         else:
             self.left = np.mean(newData['lefty'])
 
-        if self.max_depth > 0 and newData['righty'].size > 1 and newData['variance']:
+        if self.max_depth > 1 and newData['righty'].size > 1 and newData['variance']:
             self.right = RegressionTree(self.num_input_features, self.max_depth - 1)
             self.right.fit(X=newData['rightX'], y=newData['righty'], base=False)
         else:

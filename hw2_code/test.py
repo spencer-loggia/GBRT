@@ -11,7 +11,7 @@ y=np.array(y)
 X=np.array(X)
 
 
-def train(algorithm='gradient-boosted-regression-tree'):
+def train(algorithm='regression-tree'):
     """ Fit a model's parameters given the parameters specified in args.
     """
     X, y = load_data('../data/train.txt')
@@ -36,17 +36,19 @@ def test():
     X, observed_y = load_data('../data/dev.txt')
 
     model = pickle.load(open('test.model', 'rb'))
+    model.traverse()
 
     # predict labels for dataset
     preds = model.predict(X)
 
-    print(preds)
+   # print(preds)
     # output model predictions
     np.savetxt('test.predictions', preds, fmt='%s')
 
 
 train()
 test()
+
 
 #
 #

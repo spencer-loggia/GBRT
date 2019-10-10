@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9552f8e0-a9d9-4159-9afc-e090a1012408" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hw2_code/Regression-Experiments.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/Regression-Experiments.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/dev.predictions" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/dev.predictions" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2_code/regression.tree.model" beforeDir="false" afterPath="$PROJECT_DIR$/hw2_code/regression.tree.model" afterDir="false" />
@@ -85,7 +86,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -96,23 +99,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
-          <line>185</line>
+          <line>190</line>
           <option name="timeStamp" value="271" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
-          <line>61</line>
-          <option name="timeStamp" value="276" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
-          <line>51</line>
-          <option name="timeStamp" value="278" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/hw2_code/models.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="279" />
+          <line>71</line>
+          <option name="timeStamp" value="281" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
